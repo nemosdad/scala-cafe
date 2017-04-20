@@ -18,13 +18,38 @@ class Cafe {
 
 
   def getBasketTotal: BigDecimal = {
-    var total: BigDecimal = 0
+    var total: BigDecimal = 0.0
 
     for(item <- basket) {
       total += item.cost
 
     }
     total
+  }
+
+  def getBasketTotalWithServiceCharge: BigDecimal = {
+    var isThereADrinks: Boolean = false
+    var isThereFood: Boolean = false
+    var isThereHotFood: Boolean = false
+    for(item <- basket) {
+      item.itemtype match {
+          case "drink" => isThereADrinks = true
+          case "food" => isThereFood = true
+      }
+      if (item.itemtype == "food" && item.temprature == 1)
+        isThereHotFood = true
+
+    }
+
+    if((isThereADrinks == true) && (isThereFood == false) && (isThereHotFood == false) )
+      getBasketTotal
+    else if(isThereFood == true && (isThereHotFood == false)) {
+      getBasketTotal.+(getBasketTotal.*(0.1))
+    }
+    else if (isThereHotFood == true)
+      getBasketTotal.+(getBasketTotal.*(0.2))
+    else
+      getBasketTotal
   }
 
 
